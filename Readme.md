@@ -1,3 +1,50 @@
+## Steps to install Jenkins on an Ubuntu machine
+
+- Create an Ubuntu 22.04 LTS machine.
+
+- Jenkins runs as a standalone application.
+
+- The Jenkins WAR file bundles Winstone, a Jetty
+    - Winstone:
+    - Jetty:
+
+- Install using Docker:
+
+```bash
+# Pull LTS Jenkins image
+docker pull jenkins/jenkins:lts-jdk11
+
+# Create a bridged network for Jenkins using Docker
+docker network create jenkins
+
+# Run Docker container DiND
+docker run \
+  --name jenkins-docker \
+  --rm \
+  --detach \
+  --privileged \
+  --network jenkins \
+  --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind \
+  --storage-driver overlay2
+
+# What is dind?
+# https://shisho.dev/blog/posts/docker-in-docker/
+
+
+# Create a dockerfile for the jenkins image
+# Build the image as below
+docker build -t myjenkins-blueocean:2.375.3-1 .
+# The image is just a Jenkins image with docker installed on it
+
+```
+
+
+
 ## Steps to create a Jenkins machine on Linode
 
 - Go to Linode > Marketplace > Search for Jenkins
